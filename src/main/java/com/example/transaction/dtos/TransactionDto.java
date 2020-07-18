@@ -5,12 +5,14 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@ApiModel("Model Transaction")
 @SuppressWarnings("serial")
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor @Builder
 public class TransactionDto implements Serializable {

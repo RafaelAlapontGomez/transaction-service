@@ -29,15 +29,18 @@ import com.example.transaction.services.exceptions.NoAccountPresentForThisTransa
 import com.example.transaction.services.exceptions.NoBalaceForThisTransaction;
 import com.example.transaction.services.exceptions.NoRuleForThisCase;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(path = "/transaction")
 //@Slf4j
-public class TransactionControllerImpl {
+public class TransactionController {
 
 	@Autowired
 	TransactionService transactionService;
 
 	@PostMapping(path = "/create")
+	@ApiOperation(value = "Crear una transacción" )
 	public ResponseEntity<Object> postController(@Valid @RequestBody TransactionDto transactionDto) {
 		TransactionDto response = null;
 		try {
@@ -54,12 +57,14 @@ public class TransactionControllerImpl {
 	}
 
 	@GetMapping(path = "/search")
+	@ApiOperation(value = "Busca transacciones", notes = "Devuelve lista de transacciones del iban ordenados por ASC orden ascendente DESC orden descendente" )
 	public ResponseEntity<List<TransactionDto>> getController(
 			@RequestParam(name = "iban", required = false) String iban, @RequestParam(name = "order") String order) {
 		return ResponseEntity.ok(transactionService.getTransactions(iban, OrderType.getOrderType(order)));
 	}
 
 	@GetMapping(path = "/status")
+	@ApiOperation(value = "Obtiene el status de una transaccion", notes = "Obtiene el status de una transaccion a partir de su referencia y el canal" )
 	public ResponseEntity<Object> getStatus(@NotBlank @RequestParam String reference,
 			@RequestParam(required = false) String channel) {
 
@@ -82,6 +87,7 @@ public class TransactionControllerImpl {
 	}
 
 	@GetMapping(path = "/{reference}")
+	@ApiOperation(value = "Obtiene una transaccion por su referencia" )
 	public ResponseEntity<TransactionDto> getTransactionByReference(@PathVariable(value = "reference") String reference) {
 		return ResponseEntity.ok(transactionService.getTransactionByReference(reference));
 	}
