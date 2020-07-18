@@ -28,6 +28,7 @@ import com.example.transaction.services.exceptions.NeedChannelForStatus;
 import com.example.transaction.services.exceptions.NoAccountPresentForThisTransaction;
 import com.example.transaction.services.exceptions.NoBalaceForThisTransaction;
 import com.example.transaction.services.exceptions.NoRuleForThisCase;
+import com.example.transaction.services.exceptions.TransactionAlreadyInSystem;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -49,6 +50,9 @@ public class TransactionController {
 			ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getLocalizedMessage(), "");
 			return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 		} catch (NoBalaceForThisTransaction ex) {
+			ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), "");
+			return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+		} catch (TransactionAlreadyInSystem ex) {
 			ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), "");
 			return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 		}

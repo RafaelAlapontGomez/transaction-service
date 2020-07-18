@@ -25,6 +25,7 @@ import com.example.transaction.services.TransactionService;
 import com.example.transaction.services.exceptions.NoAccountPresentForThisTransaction;
 import com.example.transaction.services.exceptions.NoBalaceForThisTransaction;
 import com.example.transaction.services.exceptions.NoRuleForThisCase;
+import com.example.transaction.services.exceptions.TransactionAlreadyInSystem;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -58,7 +59,14 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public TransactionDto createTransaction(TransactionDto transactionDto) throws NoAccountPresentForThisTransaction, NoBalaceForThisTransaction {
+	public TransactionDto createTransaction(TransactionDto transactionDto) throws NoAccountPresentForThisTransaction, NoBalaceForThisTransaction, TransactionAlreadyInSystem {
+		
+		if (transactionDto.getReference() != null) {
+			Transaction transaction = repository.findByReference(transactionDto.getReference());
+			if (transaction != null) {
+				throw new TransactionAlreadyInSystem(String.format("The transaction %s already in the system", transactionDto.getReference()));
+			}
+		}
 		Account account = accountRepository.findByAccountIban(transactionDto.getAccountIban());
 		if (account == null) {
 			throw new NoAccountPresentForThisTransaction("No hay cuenta donde aplicar esta transacción");
