@@ -10,7 +10,7 @@ Feature: create transaction and bussines rules
 		When I check the status from any channel
 		Then The system returns the status INVALID
 		
-  Scenario: CASE B A transaction that is stored in our system
+  Scenario: CASE-B Channel CLIENT or ATM status SETTLED
 		Given CASEB A transaction that is stored in our system with this payload
 		| reference | channel |
 		| 00002A    | CLIENT  |
@@ -23,7 +23,7 @@ Feature: create transaction and bussines rules
 		 | amount   |  fee     |
 		 | 1093.38  |  13.18   |     
   
-  Scenario: CASEC A transaction that is stored in our system
+  Scenario: CASE-C Channel INTERNAL status SETTLED
 		Given CASEC A transaction that is stored in our system with this payload
 		| reference | channel  |
 		| 00003A    | INTERNAL |
@@ -39,7 +39,7 @@ Feature: create transaction and bussines rules
 		 | fee  |
 		 | 0.0  |     
 
-  Scenario: CASE D A transaction that is stored in our system
+  Scenario: CASE-D Channel CLIENT or ATM status PENDING
 		Given CASED A transaction that is stored in our system with this payload
 		| reference | channel |
 		| 00001A    | ATM     |
@@ -52,7 +52,7 @@ Feature: create transaction and bussines rules
 		 | amount  |  fee     |
 		 | 193.38  |  6.18   |     
   
-  Scenario: CASEE A transaction that is stored in our system
+  Scenario: CASE-E Channel INTERNAL status PENDING
 		Given CASEE A transaction that is stored in our system with this payload
 		| reference | channel  |
 		| 00006A    | INTERNAL |
@@ -68,7 +68,7 @@ Feature: create transaction and bussines rules
 		 | fee     |
 		 | 1.18    |     
 
-  Scenario: CASE F A transaction that is stored in our system
+  Scenario: CASE-F Channel CLIENT status FUTURE
 		Given CASEF A transaction that is stored in our system with this payload
 		| reference | channel |
 		| 00005A    | CLIENT  |
@@ -81,7 +81,7 @@ Feature: create transaction and bussines rules
 		 | amount  |  fee     |
 		 | 193.38  | 3.18     |     
   
-  Scenario: CASE G A transaction that is stored in our system
+  Scenario: CASE-G Channel ATM status PENDING
 		Given CASEG A transaction that is stored in our system with this payload
 		| reference | channel |
 		| 00005A    | ATM     |
@@ -94,7 +94,7 @@ Feature: create transaction and bussines rules
 		 | amount  |  fee     |
 		 | 193.38  | 3.18     |     
   
-  Scenario: CASEH A transaction that is stored in our system
+  Scenario: CASE-H Channel INTERNAL status FUTURE
 		Given CASEH A transaction that is stored in our system with this payload
 		| reference | channel  |
 		| 00004A    | INTERNAL |

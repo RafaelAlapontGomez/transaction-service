@@ -47,7 +47,12 @@ public class TransactionStepDefinition extends SpringIntegrationTest {
 	public void init() {
 		request = new StatusRequestDto();
 	}
-	
+
+	//**********************************************************************************
+	//**********************************************************************************
+	//**********************************************************************************
+	//**********************************************************************************
+
 	@Given("A new transaction")
 	public void a_new_transaction(String transaction) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
