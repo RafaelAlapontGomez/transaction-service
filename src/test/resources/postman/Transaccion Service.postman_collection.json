@@ -1,0 +1,476 @@
+{
+	"info": {
+		"_postman_id": "722b538a-9181-446d-9610-0b5d6f47faa6",
+		"name": "Transaccion Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create transaction",
+			"item": [
+				{
+					"name": "Create transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "670b1ae3-ffd0-4a1b-83bf-e18f5f4d4723",
+								"exec": [
+									"tests[\"Status code is 201\"] = responseCode.code === 201;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"12345A\";\r",
+									"tests[\"Body has accountIban\"] = responseBody.has(\"accountIban\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"reference\":\"12345A\",\t\r\n    \"accountIban\":\"ES9820385778983000760260\", \r\n    \"date\":\"2019-07-16T16:55:42.000Z\",\r\n    \"amount\":193.38, \r\n    \"fee\":3.18, \r\n    \"description\":\"Restaurant payment\"\r\n}\t",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_CREATE}}",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_CREATE}}"
+						},
+						"description": "Crea una nueva transacción en el sistema"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "search transaction",
+			"item": [
+				{
+					"name": "Search ascendente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7dafcd65-49e5-4d73-b624-915f375394bc",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_SEARCH}}?iban=ES9820385778983000760250&order=ASC",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_SEARCH}}",
+							"query": [
+								{
+									"key": "iban",
+									"value": "ES9820385778983000760250"
+								},
+								{
+									"key": "order",
+									"value": "ASC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "status",
+			"item": [
+				{
+					"name": "CASO-A transaction is not stored in our system",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dfe2db5e-23c8-4fc5-b2f0-683b8d384899",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00001F\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"INVALID\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount \" + data.amount] = data.amount === null;\r",
+									"tests[\"Body has fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === null;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00001F&channel=INTERNAL",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00001F"
+								},
+								{
+									"key": "channel",
+									"value": "INTERNAL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CASE-B Channel CLIENT or ATM status SETTLED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c93d74a6-1252-430e-8d50-eeab0de0abea",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00002A\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"SETTLED\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount: \" + data.amount] = data.amount === 1080.2;\r",
+									"tests[\"Body has fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === null;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00002A&channel=CLIENT",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00002A"
+								},
+								{
+									"key": "channel",
+									"value": "CLIENT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CASE-F Channel CLIENT status FUTURE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "29e159e2-2f23-4217-8fd5-4b0d613dff0d",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00005A\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"FUTURE\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount: \" + data.amount] = data.amount === 190.2;\r",
+									"tests[\"Body has not fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === null;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00005A&channel=CLIENT",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00005A"
+								},
+								{
+									"key": "channel",
+									"value": "CLIENT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CASE-G Channel ATM status PENDING",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73d364f7-5f70-407c-b93b-b7e1c29ac591",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00005A\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"PENDING\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount: \" + data.amount] = data.amount === 190.2;\r",
+									"tests[\"Body has fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === null;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00005A&channel=ATM",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00005A"
+								},
+								{
+									"key": "channel",
+									"value": "ATM"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CASE-D Channel CLIENT or ATM status PENDING",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f97f4655-9c8a-4e4b-8497-a0275a38ab4b",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00001A\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"PENDING\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount: \" + data.amount] = data.amount === 187.2;\r",
+									"tests[\"Body has fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === null;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00001A&channel=ATM",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00001A"
+								},
+								{
+									"key": "channel",
+									"value": "ATM"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CASE-C Channel INTERNAL status SETTLED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e15b02d1-c081-43be-a4d6-a453747eaaf6",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00003A\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"SETTLED\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount: \" + data.amount] = data.amount === -193.38;\r",
+									"tests[\"Body has fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === 0.0;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00003A&channel=INTERNAL",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00003A"
+								},
+								{
+									"key": "channel",
+									"value": "INTERNAL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CASE-E Channel INTERNAL status PENDING",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "40838574-4569-4c35-bc35-4e5287309481",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00006A\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"PENDING\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount: \" + data.amount] = data.amount === -19.38;\r",
+									"tests[\"Body has fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === 1.18;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00006A&channel=INTERNAL",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00006A"
+								},
+								{
+									"key": "channel",
+									"value": "INTERNAL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CASE-H Channel INTERNAL status FUTURE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "421dfc60-6518-4e26-aaef-52cb349a20a9",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"var data = JSON.parse(responseBody);\r",
+									"tests[\"reference: \" + data.reference] = data.reference === \"00004A\";\r",
+									"tests[\"Body has status\"] = responseBody.has(\"status\");\r",
+									"tests[\"status: \" + data.status] = data.status === \"FUTURE\";\r",
+									"tests[\"Body has amount\"] = responseBody.has(\"amount\");\r",
+									"tests[\"amount: \" + data.amount] = data.amount === 1093.38;\r",
+									"tests[\"Body has fee\"] = responseBody.has(\"fee\");\r",
+									"tests[\"fee: \" + data.fee] = data.fee === 5.18;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}:{{SERVER_PORT}}{{ENDPOINT_STATUS}}?reference=00004A&channel=INTERNAL",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"port": "{{SERVER_PORT}}{{ENDPOINT_STATUS}}",
+							"query": [
+								{
+									"key": "reference",
+									"value": "00004A"
+								},
+								{
+									"key": "channel",
+									"value": "INTERNAL"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -9,10 +9,10 @@
 		<version>2.2.7.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.examplel</groupId>
+	<groupId>com.example</groupId>
 	<artifactId>transaction-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>micro-transaction</name>
+	<name>transaction-service</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
