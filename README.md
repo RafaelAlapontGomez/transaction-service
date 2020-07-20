@@ -34,4 +34,16 @@ Este comando compilara y ejecutara los test y creara el jar.
 Si solo se quieren ejecutar los test hay que invocar al comando mvn test
 Si se quiere ejecutar el microservicio hay que invocar al comando mvn spring-boot:run
 
-Endpoints del microservicio Transaction
+Endpoints del microservicio Transacción
+/transaction/créate  Crea una transacción en el sistema.
+/transaction/search  Busca transacciones en el sistema, tiene como parámetros una cuenta en formato Iban y el orden (ascendente o descendente por fecha) que queremos ver los resultados
+/transaction/status  Consulta el status de una transacción, tiene como parámetros la referencia de la transacción y el channel.
+/transaction/{reference}  Obtiene una transacción por su referencia
+Pruebas con Postman
+1.	Ejecutar el microservicio con mvn spring-boot:run
+2.	Ejecutar postman e importar la collection Transaccion Service que esta en resources de test, carpeta postman
+3.	Ejecutar los test con la opción de postman
+Pruebas con Cucumber
+Cucumber genera un fichero en el directorio target con los resultados de los test. Cucumber.json y un directorio target/cucumber dentro del cual esta index.html que también contiene los resultados del test.
+Acceso a la consola de h2
+Con la aplicación ejecutada, puede acceder a la base de datos desde un browser con la url http://localhost:8080/h2-console
