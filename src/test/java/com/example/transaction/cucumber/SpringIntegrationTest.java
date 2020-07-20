@@ -1,5 +1,7 @@
 package com.example.transaction.cucumber;
 
+import java.util.List;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,6 +24,7 @@ public class SpringIntegrationTest {
 
 	private final String SERVER_URL = "http://localhost";
 	private final String TRANSACTION_ENDPOINT = "/transaction/status";
+	private final String SEARCH_ENDPOINT = "/transaction/search";
 	private final String CREATE_TRANSACTION = "/transaction/create";
 	private final String GET_TRANSACTION = "/transaction/";
 	
@@ -37,7 +40,12 @@ public class SpringIntegrationTest {
 	private String statusEndpoint() {
 		return SERVER_URL + ":" + port + TRANSACTION_ENDPOINT;
 	}
+
+	private String searchEndpoint() {
+		return SERVER_URL + ":" + port + SEARCH_ENDPOINT;
+	}
 	
+
 	private String transactionEndpoint() {
 		return SERVER_URL + ":" + port + CREATE_TRANSACTION;
 	}
@@ -57,7 +65,20 @@ public class SpringIntegrationTest {
 				 new ParameterizedTypeReference<StatusResponseDto>() {});
 		 return result;
 	}
+
+	public ResponseEntity<List<TransactionDto>> getTransactionResponse(String iban, String order) {
+		 final String uri = searchEndpoint();
+
+		 UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(uri)
+	       .queryParam("iban", iban)
+	       .queryParam("order", order);
+		 
+		 ResponseEntity<List<TransactionDto>> result = restTemplate.exchange(builder.buildAndExpand().toUri(), HttpMethod.GET, null,
+				 new ParameterizedTypeReference<List<TransactionDto>>() {});
+		 return result;
+	}
 	
+
 	public TransactionDto getTransactionByReference(String reference) {
 		 final String uri = searchTransactionEndpoint() + reference;
 

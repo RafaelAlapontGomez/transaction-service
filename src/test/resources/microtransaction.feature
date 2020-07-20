@@ -5,6 +5,20 @@ Feature: create transaction and bussines rules
 		When I invoke a method post
 		Then The system store the transaction in our system
 		
+  Scenario: Search transaction with iban ascencente
+		Given A iban a order ascendente
+		| iban                        | order |
+		| ES9820385778983000760250    | ASC   |
+		When I invoke a method get
+		Then The system returns list of transactions
+		
+  Scenario: Search transaction with iban descendente
+		Given A iban a order ascendente
+		| iban                        | order  |
+		| ES9820385778983000760250    | DESC   |
+		When I invoke a method get
+		Then The system returns list of transactions
+		
   Scenario: transaction is not stored in our system
 		Given A transaction that is not stored in our system
 		When I check the status from any channel

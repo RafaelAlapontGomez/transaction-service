@@ -37,6 +37,9 @@ public class TransactionStepDefinition extends SpringIntegrationTest {
 	private HttpStatus status;
 	TransactionDto transactionDto;
 	ResponseEntity<TransactionDto> createResponse;
+	ResponseEntity<List<TransactionDto>> searchResponse;
+	String iban;
+	String order;
 	//TransactionDto transaction;
 	
 	public TransactionStepDefinition(RestTemplate restTemplate) {
@@ -67,6 +70,30 @@ public class TransactionStepDefinition extends SpringIntegrationTest {
 	@Then("The system store the transaction in our system")
 	public void the_system_store_the_transaction_in_our_system() {
 		assertThat(createResponse.getStatusCode(), is(HttpStatus.CREATED));
+	}
+	
+	//**********************************************************************************
+	//**********************************************************************************
+	//**********************************************************************************
+	//**********************************************************************************
+
+	@Given("A iban a order ascendente")
+	public void a_iban_a_order_ascendente(DataTable payload) {
+		List<Map<String, String>> list = payload.asMaps(String.class, String.class);
+		iban = list.get(0).get("iban");
+		order = list.get(0).get("order");
+	}
+	
+	@When("I invoke a method get")
+	public void i_invoke_a_method_get_search() {
+		searchResponse = getTransactionResponse(iban, order);
+	}
+	
+	@Then("The system returns list of transactions")
+	public void the_system_returns_list_of_transactions() {
+		assertThat(searchResponse.getStatusCode(), is(HttpStatus.OK));
+		assertNotNull(searchResponse.getBody());
+		assertTrue(searchResponse.getBody().size() > 0);
 	}
 	
 	
